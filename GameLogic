@@ -10,6 +10,7 @@ import javax.swing.Timer;
 
 import rbadia.voidspace.model.Asteroid;
 import rbadia.voidspace.model.BigAsteroid;
+import rbadia.voidspace.model.BigBullet;
 import rbadia.voidspace.model.Bullet;
 import rbadia.voidspace.model.Ship;
 import rbadia.voidspace.sounds.SoundManager;
@@ -27,6 +28,7 @@ public class GameLogic {
 	private Asteroid asteroid;
 	private BigAsteroid bigAsteroid;
 	private List<Bullet> bullets;
+	private List<BigBullet> bigBullets;
 	
 	/**
 	 * Craete a new game logic handler
@@ -42,6 +44,8 @@ public class GameLogic {
 		
 		// init some variables
 		bullets = new ArrayList<Bullet>();
+		
+		bigBullets = new ArrayList<BigBullet>();
 	}
 
 	/**
@@ -68,6 +72,7 @@ public class GameLogic {
 		
 		// init game variables
 		bullets = new ArrayList<Bullet>();
+		bigBullets = new ArrayList<BigBullet>();
 
 		status.setShipsLeft(3);
 		status.setGameOver(false);
@@ -133,6 +138,12 @@ public class GameLogic {
 		soundMan.playBulletSound();
 	}
 	
+	public void fireBigBullet(){
+		BigBullet bigBullet = new BigBullet(ship);
+		bigBullets.add(bigBullet);
+		soundMan.playBulletSound();
+	}
+	
 	/**
 	 * Move a bullet once fired.
 	 * @param bullet the bullet to move
@@ -141,6 +152,16 @@ public class GameLogic {
 	public boolean moveBullet(Bullet bullet){
 		if(bullet.getY() - bullet.getSpeed() >= 0){
 			bullet.translate(0, -bullet.getSpeed());
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public boolean moveBigBullet(BigBullet bigBullet){
+		if(bigBullet.getY() - bigBullet.getBigSpeed() >= 0){
+			bigBullet.translate(0, -bigBullet.getBigSpeed());
 			return false;
 		}
 		else{
@@ -195,5 +216,8 @@ public class GameLogic {
 	 */
 	public List<Bullet> getBullets() {
 		return bullets;
+	}
+	public List<BigBullet> getBigBullets(){
+		return bigBullets;
 	}
 }
