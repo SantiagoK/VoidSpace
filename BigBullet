@@ -1,0 +1,41 @@
+package rbadia.voidspace.model;
+import java.awt.Rectangle;
+
+/**
+ * Represents a bullet fired by a ship.
+ */
+public class BigBullet extends Rectangle {
+	private static final long serialVersionUID = 1L;
+	
+	private int speed = 12;
+	private int bigBulletWidth = 16;
+	private int bigBulletHeight = 16;
+	
+	/**
+	 * Creates a new bullet above the ship, centered on it
+	 * @param ship
+	 */
+	public BigBullet(Ship ship) {
+		this.setLocation(ship.x + ship.width/2 - bigBulletWidth/2,
+				ship.y - bigBulletHeight);
+		this.setSize(bigBulletWidth, bigBulletHeight);
+	}
+	
+
+
+	/**
+	 * Return the bullet's speed.
+	 * @return the bullet's speed.
+	 */
+	public int getBigSpeed() {
+		return speed;
+	}
+
+	/**
+	 * Set the bullet's speed
+	 * @param speed the speed to set
+	 */
+	public void setBigSpeed(int speed) {
+		this.speed = speed;
+	}
+}
