@@ -3,6 +3,8 @@ package rbadia.voidspace.main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JOptionPane;
+
 import rbadia.voidspace.model.Ship;
 
 /**
@@ -16,13 +18,15 @@ public class InputHandler implements KeyListener{
 	private boolean spaceIsPressed;
 	private boolean shiftIsPressed;
 	private boolean eIsPressed;
+	private boolean qIsPressed;
 
 	private long lastBulletTime;
 	private long lastExchangeTime;
+	private long lastBigBulletTime;
+	private int stack= 0;
 
 	private GameLogic gameLogic;
-	private GameScreen screen;
-	private GameStatus stasus;
+
 
 
 	/**
@@ -49,13 +53,34 @@ public class InputHandler implements KeyListener{
 					gameLogic.fireBullet();
 				}
 			}
-			
+
 			if(eIsPressed){
 				long currentTime = System.currentTimeMillis();
 				if((currentTime - lastExchangeTime > 1000)){
 					lastExchangeTime = currentTime;
 					status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() - 2500);
 					status.setShipsLeft(status.getShipsLeft() + 1);
+				}
+			}
+
+			if(qIsPressed){
+				GameStatus status1 = gameLogic.getStatus();
+				if(!status1.isGameOver() && !status1.isNewShip() && !status1.isGameStarting()){
+					if(stack==0 && status1.getAsteroidsDestroyed()>= 1000){
+						stack++;
+						status1.setAsteroidsDestroyed(status1.getAsteroidsDestroyed()-1000);
+					}
+					else if(stack>= 1){
+						long currentTime = System.currentTimeMillis();
+						if((currentTime - lastBigBulletTime) > 1000){
+							lastBigBulletTime = currentTime;
+							gameLogic.fireBigBullet();
+						}
+
+					}
+				}
+				else{
+
 				}
 			}
 
@@ -83,7 +108,7 @@ public class InputHandler implements KeyListener{
 		}
 	}
 
-			
+
 
 
 	/**
@@ -152,7 +177,7 @@ public class InputHandler implements KeyListener{
 				downIsPressed = false;
 				upIsPressed = false;
 				spaceIsPressed = false;
-
+				stack=0;
 				gameLogic.newGame();
 			}
 			else{
@@ -168,12 +193,33 @@ public class InputHandler implements KeyListener{
 		case KeyEvent.VK_E:
 			GameStatus status1 = gameLogic.getStatus();
 			if(!status1.isGameStarted() && !status1.isGameOver() && !status1.isGameStarting()){
-				// new game
 			}
 			else if(status1.getAsteroidsDestroyed() < 2500){
 			}
 			else{
 				this.eIsPressed = true;
+			}
+			break;
+		case KeyEvent.VK_S:
+			GameStatus status2 = gameLogic.getStatus();
+			if(!status2.isGameStarted() && !status2.isGameOver() && !status2.isGameStarting()){
+				JOptionPane.showMessageDialog( null, 
+						"Power Up:     Price\r\n"+
+								"\r\n"+
+								"Extra Life:      2500\r\n"+
+								"Power Shot:  1000\r\n"+
+						"\r\n");
+
+			}
+			else{
+			}
+			break;
+		case KeyEvent.VK_Q:
+			GameStatus status3 = gameLogic.getStatus();
+			if(!status3.isGameStarted() && !status3.isGameOver() && !status3.isGameStarting()){		
+			}
+			else{
+				this.qIsPressed= true;
 			}
 			break;
 		}
@@ -207,6 +253,9 @@ public class InputHandler implements KeyListener{
 			break;
 		case KeyEvent.VK_E:
 			this.eIsPressed = false;
+			break;
+		case KeyEvent.VK_Q:
+			this.qIsPressed = false;
 			break;
 		}
 		e.consume();
