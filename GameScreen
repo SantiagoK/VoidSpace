@@ -207,22 +207,22 @@ public class GameScreen extends JPanel {
 				}
 			}
 
-			if((asteroid.getY() + asteroid.getSpeed() < this.getHeight()) && boom>5 && boom<10){
-				asteroid.translate(asteroid.getSpeed(), asteroid.getSpeed()/2);
-				graphicsMan.drawAsteroid(asteroid, g2d, this);
-			}
-			else if (boom > 5 && boom<10){
-				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
-				graphicsMan.drawAsteroid(asteroid, g2d, this);
-			}
-
-			if((asteroid.getY() + asteroid.getSpeed() < this.getHeight()) && boom>=10){
-				asteroid.translate(-asteroid.getSpeed(), asteroid.getSpeed()/2);
-				graphicsMan.drawAsteroid(asteroid, g2d, this);
-			}
-			else if (boom >= 10){
-				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
-			}
+//			if((asteroid.getY() + asteroid.getSpeed() < this.getHeight()) && boom>5 && boom<10){
+//				asteroid.translate(asteroid.getSpeed(), asteroid.getSpeed()/2);
+//				graphicsMan.drawAsteroid(asteroid, g2d, this);
+//			}
+//			else if (boom > 5 && boom<10){
+//				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
+//				graphicsMan.drawAsteroid(asteroid, g2d, this);
+//			}
+//
+//			if((asteroid.getY() + asteroid.getSpeed() < this.getHeight()) && boom>=10){
+//				asteroid.translate(-asteroid.getSpeed(), asteroid.getSpeed()/2);
+//				graphicsMan.drawAsteroid(asteroid, g2d, this);
+//			}
+//			else if (boom >= 10){
+//				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
+//			}
 
 			if((asteroid.getX() + asteroid.getSpeed() < this.getWidth()) && (0 < asteroid.getX() + asteroid.getSpeed())){
 			}
@@ -423,8 +423,41 @@ public class GameScreen extends JPanel {
 
 			// play ship explosion sound
 			soundMan.playShipExplosionSound();
-
 		}	
+		
+		//check ship-boss collision
+		if(boss.intersects(ship)){
+			// decrease number of ships left
+			status.setShipsLeft(status.getShipsLeft() - 1);
+			bossHealth++;
+			if (bossHealth==10){
+			status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 1000);
+
+			// "remove" asteroid
+			bossExplosion = new Rectangle(
+					boss.x,
+					boss.y,
+					boss.width,
+					boss.height);
+			boom=boom + 1;
+			}
+
+			// "remove" ship
+			shipExplosion = new Rectangle(
+					ship.x,
+					ship.y,
+					ship.width,
+					ship.height);
+			ship.setLocation(this.getWidth() + ship.width, -ship.height);
+			status.setNewShip(true);
+			lastShipTime = System.currentTimeMillis();
+
+			// play ship explosion sound
+			soundMan.playShipExplosionSound();
+			// play asteroid explosion sound
+			
+		}
+		
 
 		//check ship - boss bullet collision
 		for(int i=0; i<bulletsBoss.size(); i++){
@@ -478,6 +511,36 @@ public class GameScreen extends JPanel {
 
 				// remove bullet
 				bullets.remove(i);
+				break;
+			}
+		}
+		
+		//check boss - big bullet collision
+		for(int i=0; i<bigBullets.size(); i++){
+			BigBullet bigBullet = bigBullets.get(i);
+			if(boss.intersects(bigBullet)){
+				bossHealth= bossHealth + 2;
+				if(bossHealth >= 10){
+					// increase asteroids destroyed count
+					status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 1000);
+
+					// "remove" big asteroid
+					bossExplosion = new Rectangle(
+							boss.x,
+							boss.y,
+							boss.width,
+							boss.height);
+					
+					graphicsMan.drawBigAsteroidExplosion(bossExplosion, g2d, this);
+
+					// play asteroid explosion sound
+					soundMan.playShipExplosionSound();
+					boom=boom + 1;
+					bossHealth=0;
+				}
+
+				// remove bullet
+				bigBullets.remove(i);
 				break;
 			}
 		}
