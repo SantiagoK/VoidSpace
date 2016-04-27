@@ -55,11 +55,13 @@ public class InputHandler implements KeyListener{
 			}
 
 			if(eIsPressed){
-				long currentTime = System.currentTimeMillis();
-				if((currentTime - lastExchangeTime > 1000)){
-					lastExchangeTime = currentTime;
-					status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() - 2500);
-					status.setShipsLeft(status.getShipsLeft() + 1);
+				if(status.getAsteroidsDestroyed()>= 2500){
+					long currentTime = System.currentTimeMillis();
+					if((currentTime - lastExchangeTime > 1000)){
+						lastExchangeTime = currentTime;
+						status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() - 2500);
+						status.setShipsLeft(status.getShipsLeft() + 1);
+					}
 				}
 			}
 
@@ -204,9 +206,9 @@ public class InputHandler implements KeyListener{
 			GameStatus status2 = gameLogic.getStatus();
 			if(!status2.isGameStarted() && !status2.isGameOver() && !status2.isGameStarting()){
 				JOptionPane.showMessageDialog( null, 
-						"Power Up:     Price\r\n"+
+						"Item:     Price\r\n"+
 								"\r\n"+
-								"Extra Life:      2500\r\n"+
+								"Extra Life:      2500\r\n"+ 
 								"Power Shot:  1000\r\n"+
 						"\r\n");
 
@@ -214,9 +216,24 @@ public class InputHandler implements KeyListener{
 			else{
 			}
 			break;
-		case KeyEvent.VK_Q:
+		case KeyEvent.VK_I:
 			GameStatus status3 = gameLogic.getStatus();
-			if(!status3.isGameStarted() && !status3.isGameOver() && !status3.isGameStarting()){		
+			if(!status3.isGameStarted() && !status3.isGameOver() && !status3.isGameStarting()){
+				JOptionPane.showMessageDialog( null, 
+						"Power Up:     Explanation\r\n"+
+								"\r\n"+
+								"Extra Life:      Gives an extra life\r\n"+ 
+								"Power Shot:  Activates the Power Shot which kills all asteroid in one hit\r\n"+
+						"\r\n");
+
+			}
+			else{
+			}
+		break;
+			
+		case KeyEvent.VK_Q:
+			GameStatus status4 = gameLogic.getStatus();
+			if(!status4.isGameStarted() && !status4.isGameOver() && !status4.isGameStarting()){		
 			}
 			else{
 				this.qIsPressed= true;
