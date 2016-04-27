@@ -11,6 +11,7 @@ public class GameStatus {
 	
 	// status variables
 	private boolean newShip;
+	private boolean newBoss;
 	private boolean newAsteroid;
 	private boolean newBigAsteroid;
 	private long asteroidsDestroyed = 0;
@@ -66,6 +67,14 @@ public class GameStatus {
 
 	public synchronized void setNewShip(boolean newShip) {
 		this.newShip = newShip;
+	}
+	
+	public synchronized boolean isNewBoss() {
+		return newBoss;
+	}
+
+	public synchronized void setNewBoss(boolean newBoss) {
+		this.newBoss = newBoss;
 	}
 
 	/**
